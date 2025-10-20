@@ -22,6 +22,10 @@ app.listen(PORT, async () => {
     logger.info(`Server is running on port ${PORT}`);
 });
 
+app.get("/api/users/health", (req, res) => {
+    res.status(200).json({ status: "running", success: true });
+});
+
 app.use("/api/users/token", userRouter);
 app.use("/api/users", userRouter);
 
