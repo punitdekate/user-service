@@ -1,10 +1,9 @@
 const EventEmitter = require("events");
-const successRegistrationHtml = require("../utility/templates/successRegistration");
-const { logger } = require("helper-utils");
-const getOtp = require("../utility/templates/getOtp");
-const { body } = require("express-validator");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
+const successRegistrationHtml = require("../utility/templates/successRegistration");
+const getOtp = require("../utility/templates/getOtp");
+const { logger } = require("helper-utils-library");
 
 class UserEvents {
     constructor() {
@@ -19,36 +18,37 @@ class UserEvents {
         this.userEmitter.emit(event, ...args);
     }
 
+    // ✅ Fixed: added await
     async notifyUserRegistration(user) {
         try {
             logger.info(`✅ New user registered: ${user.email}`);
             const emailData = successRegistrationHtml(user);
-            const token = await jwt.sign(
-                {
-                    email: user.email
-                },
-                process.env.JWT_SECRET,
-                { expiresIn: "5m" }
-            );
+
+            const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+                expiresIn: "5m"
+            });
 
             const options = {
                 method: "POST",
-                url: process.env.NOTIFICATION_SERVICE_URL + "send-email",
+                url: `${process.env.NOTIFICATION_SERVICE_URL}send-email`,
                 data: {
+                    from: process.env.FROM_USER,
                     to: user.email,
                     subject: `Welcome to CodeNest, ${user.name}!`,
                     html: emailData
                 },
                 headers: {
-                    Authorization: `Bearer ${token}`, // ✅ must be inside headers
+                    Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
-                }
+                },
+                timeout: 10000 // ⏱ prevent infinite hang
             };
 
-            const emailResponse = await axios(options);
-            logger.info(`Email Response : status : ${emailResponse.status} data : ${JSON.stringify(emailResponse.data)}`);
+            const emailResponse = await axios(options); // ✅ await added
+
+            logger.info(`📧 Email sent successfully -> status: ${emailResponse.status}, data: ${JSON.stringify(emailResponse.data)}`);
         } catch (error) {
-            logger.error(`Error notifying user registration: ${error.message}`);
+            logger.error(`❌ Error notifying user registration: ${error.message}`);
         }
     }
 
@@ -57,34 +57,35 @@ class UserEvents {
             if (!user.resetPasswordToken) {
                 throw new Error("Reset password token is not set for the user.");
             }
-            logger.info(`✅ User password resetting: ${user.email}`);
+
+            logger.info(`🔐 User password resetting: ${user.email}`);
+
             const resetHtml = getOtp(resetToken);
-            const token = await jwt.sign(
-                {
-                    email: user.email
-                },
-                process.env.JWT_SECRET,
-                { expiresIn: "5m" }
-            );
+            const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+                expiresIn: "5m"
+            });
+
             const options = {
                 method: "POST",
-                url: process.env.NOTIFICATION_SERVICE_URL + "send-email",
+                url: `${process.env.NOTIFICATION_SERVICE_URL}send-email`,
                 data: {
+                    from: process.env.FROM_USER,
                     to: user.email,
-                    subject: `Password Reset Request`,
+                    subject: "Password Reset Request",
                     html: resetHtml
                 },
                 headers: {
-                    Authorization: `Bearer ${token}`, // ✅ must be inside headers
+                    Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
-                }
+                },
+                timeout: 10000
             };
 
             const emailResponse = await axios(options);
-            logger.info(`Email Response : status : ${emailResponse.status} data : ${JSON.stringify(emailResponse.data)}`);
+
+            logger.info(`📧 Password reset email sent -> status: ${emailResponse.status}, data: ${JSON.stringify(emailResponse.data)}`);
         } catch (error) {
-            logger.error(`Error in notifyPasswordReset: ${error.message}`);
-            return;
+            logger.error(`❌ Error in notifyPasswordReset: ${error.message}`);
         }
     }
 }

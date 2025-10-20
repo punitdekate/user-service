@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { failureResponse, Unauthorized } = require("helper-utils");
+const { failureResponse, Unauthorized } = require("helper-utils-library");
 
 function auth(req, res, next) {
     try {

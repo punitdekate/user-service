@@ -1,7 +1,7 @@
 const UserRepository = require("../repositories/users.repositories.js");
 const { USER_SUPPORTED_FILTERS } = require("../../constants.js");
 const { EMAIL_IS_REQUIRED, PASSWORD_IS_REQUIRED, INVALID_USER_ID, RESOURCE_NOT_FOUND, ID_IS_REQUIRED, RESET_TOKEN_AND_PASSWORD_REQUIRED, EXPIRED_RESET_TOKEN, RESET_TOKEN_REQUIRED } = require("../../errorMessages.js");
-const { BadRequest, ResourceNotFound, Unauthorized, failureResponse, successResponse, logger } = require("helper-utils");
+const { BadRequest, ResourceNotFound, Unauthorized, failureResponse, successResponse, logger } = require("helper-utils-library");
 const UserEvents = require("../events/users.events.js");
 const { use } = require("../routes/users.routes.js");
 

@@ -1,5 +1,5 @@
 const { body, validationResult } = require("express-validator");
-const { BadRequest } = require("helper-utils");
+const { BadRequest } = require("helper-utils-library");
 
 const validateUser = async (req, res, next) => {
     const rules = [

@@ -4,10 +4,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const { logger } = require("helper-utils");
+const { logger } = require("helper-utils-library");
 const userRouter = require("./src/routes/users.routes.js");
 const { connectToDb } = require("./src/config/dbConfig.js");
-const { errorHandler } = require("helper-utils");
+const { errorHandler } = require("helper-utils-library");
 const requestContextMiddleware = require("./src/middlewares/requestContext.middleware.js");
 
 const app = express();

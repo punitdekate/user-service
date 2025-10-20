@@ -1,7 +1,7 @@
 "use strict";
 const mongoose = require("mongoose");
 const { MAX_RETRY } = require("../../constants.js");
-const { logger } = require("helper-utils");
+const { logger } = require("helper-utils-library");
 
 /**
  * Connects to the MongoDB database using Mongoose.

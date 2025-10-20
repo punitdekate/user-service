@@ -1,7 +1,7 @@
 const { INVALID_CREDENTIALS, NOT_AUTHORIZED, RESOURCE_NOT_FOUND } = require("../../errorMessages.js");
-const { ResourceNotFound, Unauthorized, CustomMongooseError } = require("helper-utils");
+const { ResourceNotFound, Unauthorized, CustomMongooseError } = require("helper-utils-library");
 const UserModel = require("../schemas/user.schema.js");
-const { logger } = require("helper-utils");
+const { logger } = require("helper-utils-library");
 
 class UserRepository {
     constructor() {

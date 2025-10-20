@@ -1,5 +1,5 @@
 "use strict";
-const { requestContext, logger } = require("helper-utils");
+const { requestContext, logger } = require("helper-utils-library");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 
