@@ -88,7 +88,7 @@ userSchema.methods.generateJwtToken = async function () {
             image: this.image
         },
         process.env.JWT_SECRET,
-        { expiresIn: "8h" }
+        { expiresIn: process.env.JWT_EXPIRE }
     );
 };
 

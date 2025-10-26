@@ -46,9 +46,9 @@ class UserEvents {
 
             const emailResponse = await axios(options); // ✅ await added
 
-            logger.info(`📧 Email sent successfully -> status: ${emailResponse.status}, data: ${JSON.stringify(emailResponse.data)}`);
+            logger.info(`Email sent successfully -> status: ${emailResponse.status}, data: ${JSON.stringify(emailResponse.data)}`);
         } catch (error) {
-            logger.error(`❌ Error notifying user registration: ${error.message}`);
+            logger.error(`Error notifying user registration: ${error.message}`);
         }
     }
 
@@ -58,7 +58,7 @@ class UserEvents {
                 throw new Error("Reset password token is not set for the user.");
             }
 
-            logger.info(`🔐 User password resetting: ${user.email}`);
+            logger.info(`User password resetting: ${user.email}`);
 
             const resetHtml = getOtp(resetToken);
             const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
@@ -83,9 +83,9 @@ class UserEvents {
 
             const emailResponse = await axios(options);
 
-            logger.info(`📧 Password reset email sent -> status: ${emailResponse.status}, data: ${JSON.stringify(emailResponse.data)}`);
+            logger.info(`Password reset email sent -> status: ${emailResponse.status}, data: ${JSON.stringify(emailResponse.data)}`);
         } catch (error) {
-            logger.error(`❌ Error in notifyPasswordReset: ${error.message}`);
+            logger.error(`Error in notifyPasswordReset: ${error.message}`);
         }
     }
 }
